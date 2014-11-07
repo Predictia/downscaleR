@@ -3,18 +3,19 @@
 \alias{plotMeanField}
 \title{Plot a map of the mean value of a grid dataset}
 \usage{
-plotMeanField(gridData)
+plotMeanField(gridData, multi.member = FALSE)
 }
 \arguments{
 \item{gridData}{A grid dataset}
+
+\item{multi.member}{Should members be plotted sepparately (TRUE), or just a plot
+ of the multi-member mean (FALSE, default)?. Ignored if the dataset has no members.}
 }
 \value{
-a plot of the mean field with a world map superposed
+a plot of the mean/multi-member/multi-variable field with a world map superposed
 }
 \description{
-Plot the mean of a loaded grid dataset. The funciton is intended for obtaining
-a quick visual reference of the data loaded. In case of multi-member gridded datasets, it displays
-the multi-member mean
+Plot the spatial mean of a gridded variable, or variables in the case of multi-fields.
 }
 \details{
 The function is a wrapper of the \code{\link[fields]{image.plot}} function
@@ -22,10 +23,26 @@ in package \pkg{fields}
 }
 \note{
 The function plots a simple temporal mean of the loaded object in the form of
-a map. It does not handle other temporal aggregations. In case of multimember grid datasets,
-It simply plots the multi-member mean.
+a map. It does not handle other temporal aggregations.
+}
+\examples{
+# A field
+data(iberia_ncep_ta850)
+plotMeanField(iberia_ncep_ta850)
+# A multifield
+data(iberia_ncep_hus850)
+mf <- makeMultiField(iberia_ncep_ta850, iberia_ncep_hus850)
+plotMeanField(mf)
+# A multimember field
+data(tasmax_forecast)
+plotMeanField(tasmax_forecast) # multimember mean
+plotMeanField(tasmax_forecast, multi.member = TRUE) # by members
+# A multimember multifield
+data(tasmin_forecast)
+mm.mf <- makeMultiField(tasmax_forecast, tasmin_forecast)
+plotMeanField(mm.mf) # Note: multi-member not supported in this case
 }
 \author{
-J Bedia joaquin.bedia@gmail.com
+J Bedia \email{joaquin.bedia@gmail.com}
 }
 

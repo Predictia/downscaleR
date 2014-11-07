@@ -64,7 +64,7 @@ J. Bedia \email{joaquin.bedia@gmail.com}
 NcML Tutorial \url{http://www.unidata.ucar.edu/software/thredds/current/netcdf-java/ncml/v2.2/Tutorial.html}. Accessed 19 May 2014.).
 }
 \seealso{
-Other loading: \code{\link{dataInventory}};
-  \code{\link{loadGridData}}; \code{\link{loadStationData}}
+Other loading: \code{\link{loadGridData}};
+  \code{\link{loadStationData}}
 }
 

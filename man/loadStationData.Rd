@@ -4,8 +4,7 @@
 \title{Load station data}
 \usage{
 loadStationData(dataset, file.format = "ascii", var, stationID = NULL,
-  lonLim = NULL, latLim = NULL, season = NULL, years = NULL,
-  tz = "GMT")
+  lonLim = NULL, latLim = NULL, season = NULL, years = NULL, tz = "")
 }
 \arguments{
 \item{dataset}{A character string indicating the database to be accessed. This is usually a path to a local file or a URL
@@ -36,14 +35,14 @@ Currently only the standard \dQuote{ASCII} format supported. See references for 
 
 \item{tz}{A time zone specification to be used for the conversion of dates, if one is required
 (i.e., if the time zone of the dataset does not correspond to the system-specific one; see
-\code{\link[base]{timezones}} for details). The default assumes "GMT" (UTC, Universal Time, Coordinated),
-but be very careful as station datasets are quite heterogeneous.}
+\code{\link[base]{timezones}} for details). Default to unspecified (i.e. \code{tz = ""}).}
 }
 \value{
 a list with the following elements:
 \itemize{
 \item \code{Variable}. Name of the variable
-\item \code{Data}. Dates are ordered by rows and Stations in columns. Names are station codes
+\item \code{Data}. A 2-D matrix containing the data. Dates are ordered by rows and Stations by columns,
+following the order indicated in the \code{Metadata}.
 \item \code{xyCoords}. A 2-D matrix with longitude and latitudes of the stations
 \item \code{Dates}. A list with the verification time interval of each record in the time series.
  This is represented by a list with two elements: \code{start} and \code{end}, representing the
@@ -81,8 +80,7 @@ J. Bedia \email{joaquin.bedia@gmail.com}
 \url{https://github.com/SantanderMetGroup/downscaleR/wiki/Observation-Data-format}
 }
 \seealso{
-Other loading: \code{\link{dataInventory}};
-  \code{\link{loadGridData}};
+Other loading: \code{\link{loadGridData}};
   \code{\link{makeAggregatedDataset}}
 }
 

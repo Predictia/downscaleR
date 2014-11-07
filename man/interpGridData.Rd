@@ -3,27 +3,25 @@
 \alias{interpGridData}
 \title{Interpolate a dataset to a grid}
 \usage{
-interpGridData(gridData, new.grid.x = NULL, new.grid.y = NULL,
-  method = "bilinear")
+interpGridData(gridData, new.grid = list(x = NULL, y = NULL),
+  method = c("nearest", "bilinear"))
 }
 \arguments{
 \item{gridData}{A grid data object coming from \code{\link{loadGridData}} or the \pkg{ecomsUDG.Raccess}
 package function \code{\link[ecomsUDG.Raccess]{loadECOMS}}.}
 
-\item{new.grid.x}{Definition of the x coordinates of the grid to interpolate.
-This is a vector of length three with components \emph{from}, \emph{to} and \emph{by},
+\item{new.grid}{Definition of the new grid, in the form of a list with the x and y components, in thir order.
+Each component consists of a vector of length three with components \emph{from}, \emph{to} and \emph{by},
  in this order, similar as the arguments passed to the \code{\link[base]{seq}} function, giving the
- westernmost, easternmost and grid cell width in the X axis parameters. See details.}
-
-\item{new.grid.y}{Same as \code{new.grid.x} but for the Y coordinates, giving the southernmost,
- northernmost and grid cell resolution in the Y axis. See details}
+ westernmost, easternmost and grid cell width in the X axis and, in the same way,
+ the southernmost, northernmost and grid cell resolution in the Y axis. See details.}
 
 \item{method}{Method for interpolation. Currently implemented methods are either \code{bilinear},
-for bilinear interpolation, and \code{nearest}, for nearest-neighbor interpolation.}
+for bilinear interpolation, and \code{nearest}, for nearest-neighbor interpolation (default).}
 }
 \value{
 An interpolated object preserving the output structure of the input
-  (See e.g. \code{\link{loadGridData}}) for details on the output structure.
+ (See e.g. \code{\link{loadGridData}}) for details on the output structure.
 }
 \description{
 Performs interpolation of a gridded dataset into a new user-defined grid using bilinear weights
@@ -31,38 +29,38 @@ or nearest-neighbour methods.
 }
 \details{
 In case of default definition of either x, y or both grid coordinates, the default grid
- is calculated taking the corners of the current grid and assuming x and y resolutions equal to
- the default \code{by} argument value in function \code{\link[base]{seq}}: \emph{by = ((to - from)/(length.out - 1))}.
- The bilinear interpolator is a wrapper of the \code{\link[fields]{interp.surface.grid}} function
- in package \pkg{fields}.
- The output has special attributes in the \code{xyCoords} element that indicate that the object
-  has been interpolated. These attributes are \code{interpolation}, which indicates the method used and
-  \code{resX} and \code{resY}, for the grid-cell resolutions in the X and Y axes respectively.
-  It is also possible to pass the interpolator the grid of a previously existing grid dataset using the
-  \code{\link{getGrid}} method.
+is calculated taking the corners of the current grid and assuming x and y resolutions equal to
+the default \code{by} argument value in function \code{\link[base]{seq}}: \emph{by = ((to - from)/(length.out - 1))}.
+The bilinear interpolator is a wrapper of the \code{\link[fields]{interp.surface.grid}} function
+in package \pkg{fields}.
+The output has special attributes in the \code{xyCoords} element that indicate that the object
+ has been interpolated. These attributes are \code{interpolation}, which indicates the method used and
+ \code{resX} and \code{resY}, for the grid-cell resolutions in the X and Y axes respectively.
+ It is also possible to pass the interpolator the grid of a previously existing grid dataset using the
+ \code{\link{getGrid}} method.
 }
 \note{
 To avoid unnecessary NA values, the function will not extrapolate using a new grid outside the
- current extent of the dataset, returning an error message.
+current extent of the dataset, returning an error message.
 }
 \examples{
 \dontrun{
-# This is the path to the package built-in NCEP dataset
- ncep <- file.path(find.package("downscaleR"), "datasets/reanalysis/Iberia_NCEP/Iberia_NCEP.ncml")
+# This is the path to the package built-in NCEP dataset (assumes read permission)
+ ncep <- system.file(package = "downscaleR", "datasets" , "reanalysis", "Iberia_NCEP", "Iberia_NCEP.ncml")
 # Load air temperature at 1000 mb isobaric pressure level for boreal winter (DJF) 1991-2000
 t1000.djf <- loadGridData(ncep, var = "ta@100000", lonLim = c(-12,10), latLim = c(33,47), season = c(12,1,2), years = 1991:2000)
 par(mfrow = c(2,1))
 plotMeanField(t1000.djf)
 # Bilinear interpolation to a smaller domain centered in Spain using a 0.5 degree resolution in bot X and Y axes
-t1000.djf.05 <- interpGridData(t1000.djf, new.grid.x = c(-10,5,.5), new.grid.y = c(36,44,.5), method = "bilinear")
+t1000.djf.05 <- interpGridData(t1000.djf, new.grid = list(x = c(-10,5,.5), y = c(36,44,.5)), method = "bilinear")
 plotMeanField(t1000.djf.05)
 par(mfrow=c(1,1))
 # New attributes "interpolation", "resX" and "resY" indicate that the original data have been interpolated
-str(t1000.djf.05$xyCoords)
+attributes(t1000.djf.05$xyCoords)
 }
 }
 \author{
-J. Bedia \email{joaquin.bedia@gmail.com}
+J. Bedia \email{joaquin.bedia@gmail.com} and S. Herrera
 }
 \seealso{
 Other loading.grid: \code{\link{getGrid}};
